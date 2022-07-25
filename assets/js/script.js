@@ -45,6 +45,60 @@ var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
+// This adds an event listener "click" to the <p> tag in the list-group <ul>> element
+$(".list-group").on("click", "p", function() {      
+
+    // this is establishing the inner text as the variable text using jquery "$" and "text()"
+    var text = $(this)
+    .text()
+    .trim();
+    
+    var textInput = $("<textarea>")
+   // this dynamically makes a text area element with the class "form-control" and gives it a value of text, then replacing it with textInput
+    .addClass("form-control")
+    .val(text);
+    $(this).replaceWith(textInput);
+
+    textInput.trigger("focus");
+});
+
+
+$(".list-group").on("blur", "textarea", function() {
+
+// get the textarea's current value/text
+var text = $(this)
+.val()
+.trim();
+
+
+// get the parent ul's id attribute
+var status = $(this)
+.closest(".list-group")
+.attr("id")
+.replace("list-", "");
+
+// get the task's position in the list of other li elements
+var index = $(this)
+.closest(".list-group-item")
+.index();        
+
+// this updates the task
+tasks[status][index].text = text;
+saveTasks();
+
+// tasks is an object
+// tasks[status] returns an array (toDO)
+// tasks[status][index] returns the object at the given index in the array
+// task[status][index].text returns the text property of the object at the given index
+
+// recreate the p element dynamically after it was turned into a textarea
+var taskP = $("<p")
+.addClass("m-1")
+.text(text);
+
+//replace textarea with p element
+$(this).replaceWith(taskP);
+});
 
 
 
